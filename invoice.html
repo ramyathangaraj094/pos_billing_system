@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0" />
+
+  <title>Invoice Reports</title>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <!-- jsPDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+</head>
+
+<body class="bg-gray-100">
+
+  <div class="flex h-screen">
+
+    <!-- SIDEBAR -->
+    <div class="w-64 bg-gradient-to-b from-purple-800 to-pink-700 text-white p-5">
+
+      <h1 class="text-2xl font-bold mb-10">
+        SK DEPARTMENT STORES
+      </h1>
+
+      <ul class="space-y-2 h-screen">
+
+        <li class="bg-white/20 p-3 rounded-lg">
+          <a href="index.html">
+            <i class="bi bi-speedometer2 me-2"></i>
+            Dashboard
+          </a>
+        </li>
+
+        <li class="p-3 hover:bg-white/20 rounded-lg">
+          <a href="suppliers.html">
+            <i class="bi bi-people me-2"></i>
+            Supplier
+          </a>
+        </li>
+
+        <li class="p-3 hover:bg-white/20 rounded-lg">
+          <a href="categories.html">
+            <i class="bi bi-list-ul me-2"></i>
+            Category
+          </a>
+        </li>
+
+        <li class="p-3 hover:bg-white/20 rounded-lg">
+          <a href="unit.html">
+            <i class="bi bi-rulers me-2"></i>
+            Unit
+          </a>
+        </li>
+
+        <li class="p-3 hover:bg-white/20 rounded-lg">
+          <a href="product.html">
+            <i class="bi bi-box-seam me-2"></i>
+            Products
+          </a>
+        </li>
+
+        <li class="p-3 hover:bg-white/20 rounded-lg">
+          <a href="customercard.html">
+            <i class="bi bi-people me-2"></i>
+            Customer Card
+          </a>
+        </li>
+
+        <li class="p-3 hover:bg-white/20 rounded-lg">
+          <a href="POS.html">
+            <i class="bi bi-receipt me-2"></i>
+            POS
+          </a>
+        </li>
+
+       
+
+        <li class="bg-white/20 p-3 rounded-lg">
+          <a href="invoice.html">
+            <i class="bi bi-file-earmark-text me-2"></i>
+            Invoice
+          </a>
+        </li>
+
+      </ul>
+
+    </div>
+
+    <!-- MAIN -->
+    <div class="flex-1 overflow-y-auto">
+
+      <!-- TOP -->
+      <div class="bg-gradient-to-r from-purple-600 to-orange-500 p-4">
+
+        <h1 class="text-3xl text-white font-bold text-center">
+          Invoice Reports
+        </h1>
+
+      </div>
+
+      <!-- CONTENT -->
+      <div class="p-5">
+
+        <!-- BUTTONS -->
+        <div class="flex flex-wrap gap-3 mb-5">
+
+          <button onclick="showSalesReport('daily')"
+            class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl">
+            Daily Report
+          </button>
+
+          <button onclick="showSalesReport('weekly')"
+            class="bg-green-600 hover:bg-green-700 text-white px-5 py-3 rounded-xl">
+            Weekly Report
+          </button>
+
+          <button onclick="showSalesReport('monthly')"
+            class="bg-purple-600 hover:bg-purple-700 text-white px-5 py-3 rounded-xl">
+            Monthly Report
+          </button>
+
+          <button onclick="downloadReportPDF()"
+            class="bg-red-600 hover:bg-red-700 text-white px-5 py-3 rounded-xl">
+            Download PDF
+          </button>
+
+          <button onclick="deleteReports()"
+            class="bg-black hover:bg-gray-800 text-white px-5 py-3 rounded-xl">
+            Delete Reports
+          </button>
+
+        </div>
+
+        <!-- TABLE -->
+        <div class="bg-white rounded-2xl shadow-xl overflow-auto">
+
+          <table class="w-full border-collapse">
+
+            <thead>
+
+              <tr class="bg-gray-200">
+
+                <th class="border p-3">
+                  Invoice
+                </th>
+
+                <th class="border p-3">
+                  Date
+                </th>
+
+                <th class="border p-3">
+                  Time
+                </th>
+
+                <th class="border p-3">
+                  Items
+                </th>
+
+                <th class="border p-3">
+                  GST
+                </th>
+
+                <th class="border p-3">
+                  Coins
+                </th>
+
+                <th class="border p-3">
+                  Total
+                </th>
+
+              </tr>
+
+            </thead>
+
+            <tbody id="reportBody">
+
+              <tr>
+
+                <td colspan="7"
+                  class="text-center p-5 text-gray-500">
+
+                  No Reports
+
+                </td>
+
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+        <!-- CARDS -->
+        <div class="grid md:grid-cols-3 gap-5 mt-6">
+
+          <div class="bg-white rounded-2xl shadow-xl p-5">
+
+            <h2 class="text-gray-500 text-lg">
+              Total Sales
+            </h2>
+
+            <h1 class="text-3xl font-bold text-green-600 mt-2">
+
+              ₹<span id="reportTotal">0</span>
+
+            </h1>
+
+          </div>
+
+          <div class="bg-white rounded-2xl shadow-xl p-5">
+
+            <h2 class="text-gray-500 text-lg">
+              Total GST
+            </h2>
+
+            <h1 class="text-3xl font-bold text-red-600 mt-2">
+
+              ₹<span id="gstTotal">0</span>
+
+            </h1>
+
+          </div>
+
+          <div class="bg-white rounded-2xl shadow-xl p-5">
+
+            <h2 class="text-gray-500 text-lg">
+              Reward Coins
+            </h2>
+
+            <h1 class="text-3xl font-bold text-yellow-500 mt-2">
+
+              <span id="coinTotal">0</span>
+
+            </h1>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+ 
+
+  <script>
+
+    // SHOW REPORT
+    function showSalesReport(type) {
+
+      let reports =
+        JSON.parse(localStorage.getItem("sales")) || [];
+
+      const today =
+        new Date();
+
+      let filtered = [];
+
+      // DAILY
+      if(type === "daily") {
+
+        filtered = reports.filter(r => {
+
+          return r.date ===
+            today.toLocaleDateString();
+
+        });
+
+      }
+
+      // WEEKLY
+      if(type === "weekly") {
+
+        filtered = reports.filter(r => {
+
+          const reportDate =
+            new Date(r.fullDate || r.date);
+
+          const diff =
+            (today - reportDate) /
+            (1000 * 60 * 60 * 24);
+
+          return diff <= 7;
+
+        });
+
+      }
+
+      // MONTHLY
+      if(type === "monthly") {
+
+        filtered = reports.filter(r => {
+
+          const reportDate =
+            new Date(r.fullDate || r.date);
+
+          return reportDate.getMonth() ===
+            today.getMonth();
+
+        });
+
+      }
+
+      let html = "";
+
+      let totalSales = 0;
+
+      let totalGST = 0;
+
+      let totalCoins = 0;
+
+      filtered.forEach(r => {
+
+        totalSales +=
+          parseFloat(r.total || 0);
+
+        totalGST +=
+          parseFloat(r.gst || 0);
+
+        totalCoins +=
+          parseInt(r.coins || 0);
+
+        html += `
+
+          <tr class="text-center">
+
+            <td class="border p-3 text-blue-600 font-bold">
+              ${r.invoice}
+            </td>
+
+            <td class="border p-3">
+              ${r.date}
+            </td>
+
+            <td class="border p-3">
+              ${r.time}
+            </td>
+
+            <td class="border p-3">
+              ${r.items}
+            </td>
+
+            <td class="border p-3 text-red-500">
+              ₹${r.gst || 0}
+            </td>
+
+            <td class="border p-3 text-yellow-500 font-bold">
+              ${r.coins || 0}
+            </td>
+
+            <td class="border p-3 text-green-600 font-bold">
+              ₹${r.total}
+            </td>
+
+          </tr>
+
+        `;
+
+      });
+
+      // EMPTY
+      if(filtered.length === 0) {
+
+        html = `
+
+          <tr>
+
+            <td colspan="7"
+              class="text-center p-5 text-gray-500">
+
+              No Reports Found
+
+            </td>
+
+          </tr>
+
+        `;
+
+      }
+
+      document.getElementById("reportBody")
+      .innerHTML = html;
+
+      document.getElementById("reportTotal")
+      .innerText =
+      totalSales.toFixed(2);
+
+      document.getElementById("gstTotal")
+      .innerText =
+      totalGST.toFixed(2);
+
+      document.getElementById("coinTotal")
+      .innerText =
+      totalCoins;
+
+    }
+
+    // PDF DOWNLOAD
+    async function downloadReportPDF() {
+
+      let reports =
+        JSON.parse(localStorage.getItem("sales")) || [];
+
+      if(reports.length === 0) {
+
+        alert("No Reports Found");
+
+        return;
+
+      }
+
+      const { jsPDF } =
+        window.jspdf;
+
+      const doc =
+        new jsPDF();
+
+      let y = 20;
+
+      doc.setFontSize(20);
+
+      doc.text(
+        "SK DEPARTMENT STORES",
+        40,
+        y
+      );
+
+      y += 10;
+
+      doc.setFontSize(15);
+
+      doc.text(
+        "Invoice Reports",
+        70,
+        y
+      );
+
+      y += 15;
+
+      reports.forEach((r, index) => {
+
+        doc.setFontSize(11);
+
+        doc.text(
+
+          `${index + 1}. ${r.invoice} | ${r.date} | ₹${r.total}`,
+
+          10,
+
+          y
+
+        );
+
+        y += 10;
+
+        // NEW PAGE
+        if(y > 270) {
+
+          doc.addPage();
+
+          y = 20;
+
+        }
+
+      });
+
+      y += 10;
+
+      let totalSales =
+        reports.reduce((sum, r) => {
+
+          return sum +
+            parseFloat(r.total || 0);
+
+        }, 0);
+
+      doc.setFontSize(15);
+
+      doc.text(
+
+        "Total Sales : ₹" +
+        totalSales.toFixed(2),
+
+        10,
+
+        y
+
+      );
+
+      doc.save(
+        "Invoice_Reports.pdf"
+      );
+
+    }
+
+    // DELETE REPORTS
+    function deleteReports() {
+
+      if(confirm("Delete All Reports ?")) {
+
+        localStorage.removeItem("sales");
+
+        showSalesReport("daily");
+
+      }
+
+    }
+
+    // AUTO LOAD
+    showSalesReport("daily");
+ 
+  </script>
+ </div>
+</body>
+
+</html>

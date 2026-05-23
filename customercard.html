@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CUSTOMER CARD</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Chart JS -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+
+<body class="bg-gray-100">
+
+  <div class="flex h-screen">
+
+    <!-- Sidebar -->
+    <div class="w-64 bg-gradient-to-b from-purple-800 to-pink-700 text-white p-5">
+
+      <h1 class="text-2xl font-bold mb-10">SK DEPARTMENT STORES</S></h1>
+
+      <ul>
+
+        <a href="index.html"><li class="bg-white/20 p-3 rounded-lg">
+          <i class="bi bi-speedometer2 me-2"></i>
+          Dashboard
+          </a>
+        </li>
+
+        <!-- Supplier -->
+        <li class="p-3 hover:bg-white/20 rounded-lg cursor-pointer ">
+          <a href="suppliers.html" class="nav-link text-white mb-2">
+            <i class="bi bi-people me-2"></i>
+            Supplier
+          </a>
+        </li>
+
+        <!-- Category -->
+        <li class="p-3 hover:bg-white/20 rounded-lg cursor-pointer">
+          <a href="categories.html" class="nav-link text-white mb-2">
+            <i class="bi bi-list-ul me-2"></i>
+            Category
+          </a>
+        </li>
+
+        <!-- Unit -->
+        <li class="p-3 hover:bg-white/20 rounded-lg cursor-pointer">
+          <a href="unit.html" class="nav-link text-white mb-2">
+            <i class="bi bi-rulers me-2"></i>
+            Unit
+          </a>
+        </li>
+
+        <!--product-->
+        <a href="product.html"><li class="p-3 hover:bg-white/20 rounded-lg cursor-pointer">
+          <i class="bi bi-box-seam me-2"></i>
+          Products
+          </a>
+        </li>
+        <!--Cusromer card-->
+        <a href="customercard.html"><li class="p-3 hover:bg-white/20 rounded-lg cursor-pointer">
+          <i class="bi bi-people me-2"></i>
+          Customer Card
+          </a>
+        </li>
+        <!--POS-->
+       <a href="POS.html"><li class="p-3 hover:bg-white/20 rounded-lg cursor-pointer">
+          <i class="bi bi-receipt me-2"></i>
+          POS
+          </a>
+        </li>
+        
+        <!--Invice-->
+         <a href="invoice.html" > <li class="p-3 hover:bg-white/20 rounded-lg cursor-pointer">
+    <i class="bi bi-file-earmark-text me-2"></i>
+            Invoice
+          </a>
+        </li>
+
+      </ul>
+
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 overflow-y-auto">
+
+      <!-- Top Navbar -->
+      <div class="bg-gradient-to-r from-purple-600 to-orange-500 p-4 flex justify-between items-center">
+        <h1 class="text-2xl text-white font-bold mx-auto">CUSTOMER CARD</h1>
+      </div>
+
+ <div class=" max-w-7xl mx-auto bg-white shadow-2xl rounded-2xl p-6">
+
+    <!-- Add Customer -->
+    <div class=" flex justify-evenly gap-10">
+
+      <input
+        type="text"
+        id="customerName"
+        placeholder="Customer Name"
+        class=" border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+
+      <input
+        type="number"
+        id="customerPhone"
+        placeholder="Phone Number"
+        class=" border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+
+      <button
+        onclick="saveCustomer()"
+        class="text-2xl mx-auto bg-purple-600 text-white py-4 px-4 rounded-xl font-semibold"
+      >
+        Save Customer
+      </button>
+
+    </div>
+
+    <!-- Search -->
+    <div class="mt-8">
+
+      <h2 class="text-2xl text-purple-600 font-bold mb-3">
+        Search Customer
+      </h2>
+
+      <input
+        type="number"
+        id="searchPhone"
+        placeholder="Enter Phone Number"
+        onkeyup="fetchCustomer()"
+        class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+      />
+
+      <div class="mt-4 bg-gray-100 p-4 rounded-lg">
+        <p class="text-purple-600 text-xl font-bold">Customer Name:</p>
+
+        <h3 id="resultName" class="text-xl font-bold text-green-600">
+          Not Found
+        </h3>
+      </div>
+
+    </div>
+
+    <!-- Customer List -->
+    <div class="mt-8">
+
+      <h2 class="text-2xl text-purple-600 font-bold mb-3">
+        Customer List
+      </h2>
+
+      <div id="customerList" class="space-y-2"></div>
+
+    </div>
+
+  </div>
+
+<script>
+
+  // Load Customers
+  let customers = JSON.parse(localStorage.getItem("customers")) || [];
+
+  // Save Customer
+  function saveCustomer() {
+
+    let name = document.getElementById("customerName").value.trim();
+    let phone = document.getElementById("customerPhone").value.trim();
+
+    if(name === "" || phone === "") {
+      alert("Please enter name and phone number");
+      return;
+    }
+
+    // Check Duplicate
+    let exists = customers.find(c => c.phone === phone);
+
+    if(exists) {
+      alert("Phone number already exists");
+      return;
+    }
+
+    let customer = {
+      name,
+      phone
+    };
+
+    customers.push(customer);
+
+    localStorage.setItem("customers", JSON.stringify(customers));
+
+    document.getElementById("customerName").value = "";
+    document.getElementById("customerPhone").value = "";
+
+    loadCustomers();
+
+    alert("Customer Saved Successfully");
+  }
+
+  // Fetch Customer by Phone
+  function fetchCustomer() {
+
+    let phone = document.getElementById("searchPhone").value;
+
+    let customer = customers.find(c => c.phone === phone);
+
+    if(customer) {
+      document.getElementById("resultName").innerText = customer.name;
+    } else {
+      document.getElementById("resultName").innerText = "Not Found";
+    }
+  }
+
+  // Display Customers
+  function loadCustomers() {
+
+    let list = document.getElementById("customerList");
+
+    list.innerHTML = "";
+
+    customers = JSON.parse(localStorage.getItem("customers")) || [];
+
+    customers.forEach((customer, index) => {
+
+      list.innerHTML += `
+        <div class="bg-blue-50 p-3 rounded-lg flex justify-between items-center">
+          <div>
+            <h3 class="font-bold">${customer.name}</h3>
+            <p class="text-sm text-gray-600">${customer.phone}</p>
+          </div>
+
+          <button
+            onclick="deleteCustomer(${index})"
+            class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
+          >
+            Delete
+          </button>
+        </div>
+      `;
+    });
+  }
+
+  // Delete Customer
+  function deleteCustomer(index) {
+
+    customers.splice(index, 1);
+
+    localStorage.setItem("customers", JSON.stringify(customers));
+
+    loadCustomers();
+  }
+
+  // Initial Load
+  loadCustomers();
+
+</script>
+
+
+
+    </div>
+</body>
+</html>

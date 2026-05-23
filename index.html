@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Chart JS -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- jsPDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+
+<body class="bg-gray-100">
+
+  <div class="flex h-screen">
+
+    <!-- Sidebar -->
+    <div class="w-64 bg-gradient-to-b from-purple-800 to-pink-700 text-white p-5">
+
+      <h1 class="text-2xl font-bold mb-10">SK DEPARTMENT STORES</S></h1>
+
+      <ul>
+
+        <a href="index.html"><li class="bg-white/20 p-3 rounded-lg">
+          <i class="bi bi-speedometer2 me-2"></i>
+          Dashboard
+          </a>
+        </li>
+
+        <!-- Supplier -->
+        <li class="p-3 hover:bg-white/20 rounded-lg cursor-pointer ">
+          <a href="suppliers.html" class="nav-link text-white mb-2">
+            <i class="bi bi-people me-2"></i>
+            Supplier
+          </a>
+        </li>
+
+        <!-- Category -->
+        <li class="p-3 hover:bg-white/20 rounded-lg cursor-pointer">
+          <a href="categories.html" class="nav-link text-white mb-2">
+            <i class="bi bi-list-ul me-2"></i>
+            Category
+          </a>
+        </li>
+
+        <!-- Unit -->
+        <li class="p-3 hover:bg-white/20 rounded-lg cursor-pointer">
+          <a href="unit.html" class="nav-link text-white mb-2">
+            <i class="bi bi-rulers me-2"></i>
+            Unit
+          </a>
+        </li>
+
+        <!--product-->
+        <a href="product.html"><li class="p-3 hover:bg-white/20 rounded-lg cursor-pointer">
+          <i class="bi bi-box-seam me-2"></i>
+          Products
+          </a>
+        </li>
+        <!--Cusromer card-->
+        <a href="customercard.html"><li class="p-3 hover:bg-white/20 rounded-lg cursor-pointer">
+          <i class="bi bi-people me-2"></i>
+          Customer Card
+          </a>
+        </li>
+        <!--POS-->
+       <a href="POS.html"><li class="p-3 hover:bg-white/20 rounded-lg cursor-pointer">
+          <i class="bi bi-receipt me-2"></i>
+          POS
+          </a>
+        </li>
+       
+        <!--Invice-->
+         <a href="invoice.html" > <li class="p-3 hover:bg-white/20 rounded-lg cursor-pointer">
+    <i class="bi bi-file-earmark-text me-2"></i>
+            Invoice
+          </a>
+        </li>
+
+      </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 overflow-y-auto">
+
+      <!-- Top Navbar -->
+      <div class="bg-gradient-to-r from-purple-600 to-orange-500 p-4 flex justify-between items-center">
+        <h1 class="text-2xl text-white font-bold">DASHBOARD</h1>
+        <button onclick="downloadPDF()"
+          class=" text-white text-lg font-bold px-4 py-2 rounded-full bg-white/20 cursor-pointer">
+          Generate Report Download
+        </button>
+      </div>
+      <div>
+        <h1 class="text-4xl text-center mt-5 text-purple-600 font-bold">Reports</h1>
+      </div>
+      <!-- Card 1 -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5 p-6">
+          
+        <div class="bg-cyan-500 text-white p-6 rounded-xl shadow-lg">
+  <h3 class="text-lg font-semibold">Customer Card</h3>
+  <h1 id="customerCount" class="text-4xl font-bold mt-3">0</h1>
+       </div>
+        <!-- Card 2 -->
+        <div class="bg-pink-500 text-white p-6 rounded-xl shadow-lg">
+  <h3 class="text-lg font-semibold">Total Revenue</h3>
+
+  <h1 class="text-4xl font-bold mt-3">
+    ₹<span id="reportTotal">0</span>
+  </h1>
+</div>
+        <!-- Card 3 -->
+        <div class="bg-yellow-500 text-white p-6 rounded-xl shadow-lg">
+  <h3 class="text-lg font-semibold">Total Invoice</h3>
+
+  <h1 class="text-4xl font-bold mt-3">
+    <span id="invoiceCount">0</span>
+  </h1>
+</div>
+
+        <!-- Card 4 -->
+        <div class="bg-green-500 text-white p-6 rounded-xl shadow-lg">
+  <h3 class="text-lg font-semibold">Low Stock</h3>
+
+  <h1 class="text-4xl font-bold mt-3">
+    <span id="lowStockCount">0</span>
+  </h1>
+
+  <p id="lowStockNames" class="text-sm mt-2"></p>
+</div>
+<script>
+  function loadLowStock() {
+
+  let inventory =
+    JSON.parse(localStorage.getItem("inventory")) || [];
+
+  // filter stock < 5
+  let lowStock = inventory.filter(item =>
+    Number(item.stock) < 5
+  );
+
+  // count
+  document.getElementById("lowStockCount")
+    .innerText = lowStock.length;
+
+  // names list
+  let names = lowStock.map(item =>
+    item.name + " (" + item.stock + ")"
+  ).join(", ");
+
+  document.getElementById("lowStockNames")
+    .innerText = names || "No Low Stock";
+}
+
+loadLowStock();
+</script>
+        <!--Card 5-->
+       <div class="bg-indigo-500 text-white p-6 rounded-xl shadow-lg">
+  <h3 class="text-lg font-semibold">Expired Product</h3>
+
+  <h1 class="text-4xl font-bold mt-3">
+    <span id="expiredCount">0</span>
+  </h1>
+
+  <p id="expiredNames" class="text-sm mt-2"></p>
+</div>
+
+
+      </div>
+
+      <!-- Charts -->
+      <div class="grid grid-cols-1 lg:grid-cols-1 gap-5 p-6">
+
+        <!-- Line Chart -->
+        <div class="bg-white p-5 rounded-xl shadow-lg">
+
+          <h2 class="text-4xl text-purple-600 text-center font-bold mb-4">
+            Revenue Analytics
+          </h2>
+
+          <canvas id="dashboardChart"></canvas>
+
+        </div>
+
+      
+       
+
+      </div>
+
+    </div>
+
+  </div>
+  <script>
+
+let chart;
+
+function loadDashboard() {
+
+  let sales = JSON.parse(localStorage.getItem("sales")) || [];
+  let inventory = JSON.parse(localStorage.getItem("inventory")) || [];
+  let customers = JSON.parse(localStorage.getItem("customers")) || [];
+
+  let revenue = sales.reduce((s, i) =>
+    s + Number(i.total || 0), 0);
+
+  let lowStockItems = inventory.filter(p => Number(p.stock) < 5);
+
+  let expiredItems = inventory.filter(p =>
+    p.expiry &&
+    new Date(p.expiry) <= new Date(Date.now() + 2 * 86400000)
+  );
+
+  // UI update
+  document.getElementById("reportTotal").innerText = revenue.toFixed(2);
+  document.getElementById("invoiceCount").innerText = sales.length;
+  document.getElementById("customerCount").innerText = customers.length;
+  document.getElementById("lowStockCount").innerText = lowStockItems.length;
+  document.getElementById("expiredCount").innerText = expiredItems.length;
+
+  // chart
+  let grouped = {};
+
+  sales.forEach(s => {
+    let d = s.date || "Unknown";
+    grouped[d] = (grouped[d] || 0) + Number(s.total || 0);
+  });
+
+  let labels = Object.keys(grouped);
+  let data = Object.values(grouped);
+
+  if (chart) chart.destroy();
+
+  chart = new Chart(document.getElementById("dashboardChart"), {
+    type: "line",
+    data: {
+      labels,
+      datasets: [{
+        label: "Revenue",
+        data,
+        borderColor: "#3b82f6",
+        backgroundColor: "rgba(59,130,246,0.2)",
+        fill: true,
+        tension: 0.4
+      }]
+    }
+  });
+
+  // return DATA for PDF
+  return {
+    revenue,
+    customers: customers.length,
+    lowStockItems,
+    expiredItems
+  };
+}
+
+function downloadPDF() {
+
+  const data = loadDashboard(); // ✅ FIXED
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  let y = 20;
+
+  doc.setFontSize(18);
+  doc.text("SK DEPARTMENT STORE REPORT", 20, y);
+
+  y += 15;
+
+  doc.setFontSize(12);
+
+  doc.text("Total Revenue: ₹" + data.revenue.toFixed(2), 20, y);
+  y += 10;
+
+  doc.text("Total Customers: " + data.customers, 20, y);
+  y += 10;
+
+  doc.text("Low Stock: " + data.lowStockItems.length, 20, y);
+  y += 10;
+
+  doc.text("Expired Products: " + data.expiredItems.length, 20, y);
+
+  y += 15;
+
+  doc.setFontSize(14);
+  doc.text("Low Stock Items:", 20, y);
+  y += 10;
+
+  data.lowStockItems.forEach(i => {
+    doc.setFontSize(10);
+    doc.text(`${i.name} - ${i.stock}`, 20, y);
+    y += 7;
+
+    if (y > 270) {
+      doc.addPage();
+      y = 20;
+    }
+  });
+
+  y += 10;
+
+  doc.setFontSize(14);
+  doc.text("Expired Items:", 20, y);
+  y += 10;
+
+  data.expiredItems.forEach(i => {
+    doc.setFontSize(10);
+    doc.text(`${i.name} - ${i.expiry}`, 20, y);
+    y += 7;
+
+    if (y > 270) {
+      doc.addPage();
+      y = 20;
+    }
+  });
+
+  doc.save("dashboard_report.pdf");
+}
+
+loadDashboard();
+
+</script>
+
+  
+
+</body>
+
+</html>

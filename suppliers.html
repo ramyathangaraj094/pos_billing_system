@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SUPPLIERS</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Chart JS -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+
+<body class="bg-gray-100">
+
+    <div class="flex h-screen">
+
+        <!-- Sidebar -->
+        <div class="w-64 bg-gradient-to-b from-purple-800 to-pink-700 text-white p-5">
+
+            <h1 class="text-2xl font-bold mb-10">SK DEPARTMENT STORES</S></h1>
+
+          <ul>
+
+        <a href="index.html"><li class="bg-white/20 p-3 rounded-lg">
+          <i class="bi bi-speedometer2 me-2"></i>
+          Dashboard
+          </a>
+        </li>
+
+        <!-- Supplier -->
+        <li class="p-3 hover:bg-white/20 rounded-lg cursor-pointer ">
+          <a href="suppliers.html" class="nav-link text-white mb-2">
+            <i class="bi bi-people me-2"></i>
+            Supplier
+          </a>
+        </li>
+
+        <!-- Category -->
+        <li class="p-3 hover:bg-white/20 rounded-lg cursor-pointer">
+          <a href="categories.html" class="nav-link text-white mb-2">
+            <i class="bi bi-list-ul me-2"></i>
+            Category
+          </a>
+        </li>
+
+        <!-- Unit -->
+        <li class="p-3 hover:bg-white/20 rounded-lg cursor-pointer">
+          <a href="unit.html" class="nav-link text-white mb-2">
+            <i class="bi bi-rulers me-2"></i>
+            Unit
+          </a>
+        </li>
+
+        <!--product-->
+        <a href="product.html"><li class="p-3 hover:bg-white/20 rounded-lg cursor-pointer">
+          <i class="bi bi-box-seam me-2"></i>
+          Products
+          </a>
+        </li>
+        <!--Cusromer card-->
+        <a href="customercard.html"><li class="p-3 hover:bg-white/20 rounded-lg cursor-pointer">
+          <i class="bi bi-people me-2"></i>
+          Customer Card
+          </a>
+        </li>
+        <!--POS-->
+       <a href="POS.html"><li class="p-3 hover:bg-white/20 rounded-lg cursor-pointer">
+          <i class="bi bi-receipt me-2"></i>
+          POS
+          </a>
+        </li>
+        
+        <!--Invice-->
+         <a href="invoice.html" > <li class="p-3 hover:bg-white/20 rounded-lg cursor-pointer">
+    <i class="bi bi-file-earmark-text me-2"></i>
+            Invoice
+          </a>
+        </li>
+
+      </ul>
+
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 overflow-y-auto">
+
+            <!-- Top Navbar -->
+            <div class="bg-gradient-to-r from-purple-600 to-orange-500 p-4 flex justify-between items-center">
+                <h1 class="text-2xl text-white font-bold mx-auto">SUPPLIERS</h1>
+
+            </div>
+            <div class="max-w-7xl mx-auto bg-white p-8 rounded-2xl shadow-xl">
+                <!-- FORM -->
+                <form id="supplierForm" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                    <!-- Supplier ID -->
+                    <div>
+                        <label class="block font-semibold mb-2">
+                            Supplier ID
+                        </label>
+
+                        <input type="text" id="supplierId" placeholder="SUP001"
+                            class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-600"
+                            required>
+                    </div>
+
+                    <!-- Supplier Name -->
+                    <div>
+                        <label class="block font-semibold mb-2">
+                            Supplier Name
+                        </label>
+
+                        <input type="text" id="supplierName" placeholder="ABC Traders"
+                            class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-600"
+                            required>
+                    </div>
+
+                    <!-- Company -->
+                    <div>
+                        <label class="block font-semibold mb-2">
+                            Company Name
+                        </label>
+
+                        <input type="text" id="company" placeholder="ABC Pvt Ltd"
+                            class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-600"
+                            required>
+                    </div>
+
+                    <!-- Mobile -->
+                    <div>
+                        <label class="block font-semibold mb-2">
+                            Mobile Number
+                        </label>
+
+                        <input type="tel" id="mobile" placeholder="9876543210"
+                            class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-600"
+                            required>
+                    </div>
+
+                    <!-- Email -->
+                    <div>
+                        <label class="block font-semibold mb-2">
+                            Email Address
+                        </label>
+
+                        <input type="email" id="email" placeholder="supplier@gmail.com"
+                            class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-600"
+                            required>
+                    </div>
+
+                    <!-- GST -->
+                    <div>
+                        <label class="block font-semibold mb-2">
+                            GST Number
+                        </label>
+
+                        <input type="text" id="gst" placeholder="22AAAAA0000A1Z5"
+                            class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-600"
+                            required>
+                    </div>
+
+                    <!-- Address -->
+                    <div>
+
+                        <label class="block font-semibold mb-2">
+                            Address
+                        </label>
+
+                        <textarea id="address" rows="4" placeholder="Enter supplier address..."
+                            class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-600"
+                            required></textarea>
+
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="md:col-span-2 flex flex-wrap gap-4">
+
+                        <button type="submit"
+                            class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl font-semibold">
+                            Save Supplier
+                        </button>
+
+                        <button type="reset"
+                            class="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-xl font-semibold">
+                            Clear
+                        </button>
+
+                        <button type="button" onclick="showJSONReport()"
+                            class="bg-blue-600 hover:bg-blue-600 text-white px-6 py-3 rounded-xl font-semibold">
+                            JSON Report
+                        </button>
+
+                    </div>
+
+                </form>
+
+                <!-- TABLE -->
+                <div class="mt-10 overflow-x-auto">
+
+                    <table class="w-full border-collapse">
+
+                        <thead>
+
+                            <tr
+                                class="bg-gradient-to-r from-purple-600 to-orange-500 p-2 text-white font-bold text-lg ">
+
+                                <th class="p-3 text-left">ID</th>
+                                <th class="p-3 text-left">Name</th>
+                                <th class="p-3 text-left">Company</th>
+                                <th class="p-3 text-left">Mobile</th>
+                                <th class="p-3 text-left">Email</th>
+                                <th class="p-3 text-left">GST</th>
+                                <th class="p-3 text-left">Action</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="supplierTable">
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+            </div>
+
+            <!-- JSON REPORT -->
+            <div class="mt-10 ml-10">
+
+                <h2 class="text-3xl font-bold text-purple-800 mb-4">
+                    JSON Report
+                </h2>
+
+                <pre id="jsonReport" class="bg-gray-700 text-green-400 p-6 rounded-2xl overflow-x-auto text-sm">
+                    No Data
+            </pre>
+
+            </div>
+
+        </div>
+
+        <script>
+
+            const supplierForm = document.getElementById("supplierForm");
+
+            const supplierTable = document.getElementById("supplierTable");
+
+            const jsonReport = document.getElementById("jsonReport");
+
+            let suppliers = JSON.parse(localStorage.getItem("suppliers")) || [];
+
+            // DISPLAY SUPPLIERS
+            function displaySuppliers() {
+
+                supplierTable.innerHTML = "";
+
+                suppliers.forEach((supplier, index) => {
+
+                    supplierTable.innerHTML += `
+
+                    <tr class="border-b hover:bg-gray-100">
+
+                        <td class="p-3">${supplier.id}</td>
+
+                        <td class="p-3">${supplier.name}</td>
+
+                        <td class="p-3">${supplier.company}</td>
+
+                        <td class="p-3">${supplier.mobile}</td>
+
+                        <td class="p-3">${supplier.email}</td>
+
+                        <td class="p-3">${supplier.gst}</td>
+
+                        <td class="p-3 flex gap-2">
+
+                            <!-- EDIT -->
+                            <button 
+                                onclick="editSupplier(${index})"
+                                class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg">
+                                Edit
+                            </button>
+
+                            <!-- DELETE -->
+                            <button 
+                                onclick="deleteSupplier(${index})"
+                                class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg">
+                                Delete
+                            </button>
+
+                        </td>
+
+                    </tr>
+
+                `;
+
+                });
+
+            }
+
+            // ADD SUPPLIER
+            supplierForm.addEventListener("submit", function (e) {
+
+                e.preventDefault();
+
+                const supplierId = document.getElementById("supplierId").value;
+
+                // PRIMARY KEY CHECK
+                const alreadyExists = suppliers.find(
+                    supplier => supplier.id === supplierId
+                );
+
+                if (alreadyExists) {
+
+                    alert("Supplier ID already exists!");
+
+                    return;
+
+                }
+
+                const supplier = {
+
+                    id: supplierId,
+
+                    name: document.getElementById("supplierName").value,
+
+                    company: document.getElementById("company").value,
+
+                    mobile: document.getElementById("mobile").value,
+
+                    email: document.getElementById("email").value,
+
+                    gst: document.getElementById("gst").value,
+
+                    address: document.getElementById("address").value
+
+                };
+
+                suppliers.push(supplier);
+
+                localStorage.setItem(
+                    "suppliers",
+                    JSON.stringify(suppliers)
+                );
+
+                displaySuppliers();
+
+                showJSONReport();
+
+                supplierForm.reset();
+
+            });
+
+            // DELETE SUPPLIER
+            function deleteSupplier(index) {
+
+                suppliers.splice(index, 1);
+
+                localStorage.setItem(
+                    "suppliers",
+                    JSON.stringify(suppliers)
+                );
+
+                displaySuppliers();
+
+                showJSONReport();
+
+            }
+
+            // EDIT SUPPLIER
+            function editSupplier(index) {
+
+                const supplier = suppliers[index];
+
+                // FORM VALUES
+                document.getElementById("supplierId").value = supplier.id;
+
+                document.getElementById("supplierName").value = supplier.name;
+
+                document.getElementById("company").value = supplier.company;
+
+                document.getElementById("mobile").value = supplier.mobile;
+
+                document.getElementById("email").value = supplier.email;
+
+                document.getElementById("gst").value = supplier.gst;
+
+                document.getElementById("address").value = supplier.address;
+
+                // REMOVE OLD DATA
+                suppliers.splice(index, 1);
+
+                localStorage.setItem(
+                    "suppliers",
+                    JSON.stringify(suppliers)
+                );
+
+                displaySuppliers();
+
+                showJSONReport();
+
+            }
+
+            // JSON REPORT
+            function showJSONReport() {
+
+                jsonReport.textContent =
+                    JSON.stringify(suppliers, null, 2);
+
+            }
+
+            // INITIAL DISPLAY
+            displaySuppliers();
+
+            showJSONReport();
+
+        </script>
+
+    </div>
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>SK Department Stores POS</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <!-- Barcode Scanner -->
+  <script src="https://unpkg.com/html5-qrcode"></script>
+
+  <!-- jsPDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+</head>
+
+<body class="bg-gray-100">
+
+  <div class="p-5 grid lg:grid-cols-3 gap-6">
+
+     <div >
+    <div class="w-64 bg-gradient-to-b from-purple-800 to-pink-700 text-white p-5 min-h-screen">
+     <h1 class="text-2xl font-bold mb-10">
+        SK DEPARTMENT STORES
+      </h1>
+
+      <ul class="space-y-2">
+
+        <li class="bg-white/20 p-3 rounded-lg">
+          <a href="index.html">
+            <i class="bi bi-speedometer2 me-2"></i>
+            Dashboard
+          </a>
+        </li>
+
+        <li class="p-3 hover:bg-white/20 rounded-lg">
+          <a href="suppliers.html">
+            <i class="bi bi-people me-2"></i>
+            Supplier
+          </a>
+        </li>
+
+        <li class="p-3 hover:bg-white/20 rounded-lg">
+          <a href="categories.html">
+            <i class="bi bi-list-ul me-2"></i>
+            Category
+          </a>
+        </li>
+
+        <li class="p-3 hover:bg-white/20 rounded-lg">
+          <a href="unit.html">
+            <i class="bi bi-rulers me-2"></i>
+            Unit
+          </a>
+        </li>
+
+        <li class="p-3 hover:bg-white/20 rounded-lg">
+          <a href="product.html">
+            <i class="bi bi-box-seam me-2"></i>
+            Products
+          </a>
+        </li>
+
+        <li class="p-3 hover:bg-white/20 rounded-lg">
+          <a href="customercard.html">
+            <i class="bi bi-people me-2"></i>
+            Customer Card
+          </a>
+        </li>
+
+        <li class="p-3 hover:bg-white/20 rounded-lg">
+          <a href="POS.html">
+            <i class="bi bi-receipt me-2"></i>
+            POS
+          </a>
+        </li>
+
+        
+
+        <li class="bg-white/20 p-3 rounded-lg">
+          <a href="invoice.html">
+            <i class="bi bi-file-earmark-text me-2"></i>
+            Invoice
+          </a>
+        </li>
+
+      </ul>
+
+    </div>
+  </div>
+
+    <!-- LEFT -->
+     
+
+            
+    <div class="bg-white p-5 rounded-2xl shadow-xl w-full ">
+
+      <h2 class="text-3xl font-bold text-purple-600 text-center mb-5">
+        Pos Invoice
+      </h2>
+
+      <!-- SCANNER -->
+      <div class="border rounded-xl overflow-hidden mb-5">
+        <div id="reader" class="w-full"></div>
+      </div>
+
+      <!-- BARCODE -->
+      <div class="flex gap-3 mb-5">
+
+        <input type="text" id="barcodeInput"
+          placeholder="Enter Barcode"
+          class="flex-1 border p-3 rounded-xl">
+
+        <button onclick="manualScan()"
+          class="bg-blue-600 hover:bg-blue-700 text-white px-6 rounded-xl">
+          Add
+        </button>
+
+      </div>
+
+      <!-- CUSTOMER -->
+      <div class="mb-5">
+
+        <h2 class="text-lg font-bold mb-3">
+          Customer Search
+        </h2>
+
+        <input type="text"
+          id="searchPhone"
+          placeholder="Enter Phone Number"
+          onkeyup="fetchCustomer()"
+          class="w-full border p-3 rounded-xl">
+
+        <div class="mt-4 bg-gray-100 p-4 rounded-xl">
+
+          <p class="text-gray-500">
+            Customer Name
+          </p>
+
+          <h3 id="resultName"
+            class="text-2xl font-bold text-green-600">
+            Not Found
+          </h3>
+
+        </div>
+
+      </div>
+
+      <!-- BILL TABLE -->
+      <div class="overflow-auto rounded-xl border">
+
+        <table class="w-full border-collapse">
+
+          <thead>
+
+            <tr class="bg-blue-600 text-white">
+
+              <th class="border p-3">Invoice</th>
+              <th class="border p-3">Product</th>
+              <th class="border p-3">Qty</th>
+              <th class="border p-3">Price</th>
+              <th class="border p-3">Total</th>
+              <th class="border p-3">Action</th>
+
+            </tr>
+
+          </thead>
+
+          <tbody id="billBody"></tbody>
+
+        </table>
+
+      </div>
+
+      <!-- TOTAL -->
+      <div class="text-right mt-5">
+
+        <h2 class="text-3xl font-bold text-green-600">
+          ₹ <span id="grandTotal">0</span>
+        </h2>
+
+      </div>
+
+      <!-- BUTTONS -->
+      <div class="grid grid-cols-2 gap-4 mt-6">
+
+        <button onclick="showPreview()"
+          class="bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl">
+          Preview Bill
+        </button>
+
+        <button onclick="downloadPDF()"
+          class="bg-red-600 hover:bg-red-700 text-white py-3 rounded-xl">
+          Download PDF
+        </button>
+
+        <button onclick="clearBill()"
+          class="bg-gray-700 hover:bg-gray-800 text-white py-3 rounded-xl">
+          Clear Bill
+        </button>
+
+      </div>
+
+    </div>
+
+    <!-- RIGHT -->
+    <div class="space-y-6">
+
+      <!-- PREVIEW -->
+      <div class="bg-white p-5 rounded-2xl shadow-xl">
+
+        <h2 class="text-2xl font-bold text-purple-600 text-center mb-5">
+          Bill Preview
+        </h2>
+
+        <div id="previewArea"
+          class="border rounded-xl p-5 bg-gray-50">
+
+          <div class="text-center mb-5">
+
+            <h1 class="text-3xl font-bold">
+              SK DEPARTMENT STORES
+            </h1>
+
+            <p class="text-gray-600">
+              Billing Receipt
+            </p>
+
+            <p id="dateTime"
+              class="mt-2 text-sm text-gray-500"></p>
+
+          </div>
+
+          <!-- CUSTOMER -->
+          <div class="border rounded-lg p-4 mb-5 bg-white">
+
+            <div class="flex justify-between mb-2">
+
+              <span class="font-semibold">
+                Customer Name :
+              </span>
+
+              <span id="billCustomerName">
+                Not Found
+              </span>
+
+            </div>
+
+            <div class="flex justify-between">
+
+              <span class="font-semibold">
+                Phone Number :
+              </span>
+
+              <span id="billCustomerPhone">
+                0000000000
+              </span>
+
+            </div>
+
+          </div>
+
+          <!-- TABLE -->
+          <table class="w-full border-collapse border">
+
+            <thead>
+
+              <tr class="bg-gray-200">
+
+                <th class="border p-2">Invoice</th>
+                <th class="border p-2">Item</th>
+                <th class="border p-2">Qty</th>
+                <th class="border p-2">Price</th>
+                <th class="border p-2">Total</th>
+
+              </tr>
+
+            </thead>
+
+            <tbody id="previewBody"></tbody>
+
+          </table>
+
+          <!-- TOTAL -->
+          <div class="mt-5 space-y-2 text-lg">
+
+            <div class="flex justify-between">
+              <span>Subtotal :</span>
+              <span>₹<span id="subTotal">0</span></span>
+            </div>
+
+            <div class="flex justify-between">
+              <span>SGST (9%) :</span>
+              <span>₹<span id="sgstTotal">0</span></span>
+            </div>
+
+            <div class="flex justify-between">
+              <span>CGST (9%) :</span>
+              <span>₹<span id="cgstTotal">0</span></span>
+            </div>
+
+            <div class="flex justify-between font-bold text-red-600">
+              <span>GST (18%) :</span>
+              <span>₹<span id="gstTotal">0</span></span>
+            </div>
+
+          </div>
+
+          <!-- GRAND TOTAL -->
+          <div class="text-right mt-5 text-3xl font-bold text-green-700">
+
+            Grand Total :
+            ₹<span id="previewTotal">0</span>
+
+          </div>
+
+          <!-- REWARD -->
+          <div class="text-right mt-3 text-xl font-semibold text-blue-600">
+
+            Reward Points :
+            <span id="rewardPoints">0</span>
+
+          </div>
+
+          <!-- FOOTER -->
+          <div class="text-center mt-10 text-gray-500 font-semibold">
+
+            Thank You Visit Again
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- SALES REPORT -->
+      <div class="bg-white p-5 rounded-2xl shadow-xl">
+
+        <h2 class="text-2xl font-bold text-red-600 text-center mb-5">
+          Sales Reports
+        </h2>
+
+        <div class="flex flex-wrap gap-3 mb-5">
+
+          <button onclick="showSalesReport('daily')"
+            class="bg-blue-600 text-white px-4 py-2 rounded-lg">
+            Daily
+          </button>
+
+          <button onclick="showSalesReport('weekly')"
+            class="bg-green-600 text-white px-4 py-2 rounded-lg">
+            Weekly
+          </button>
+
+          <button onclick="showSalesReport('monthly')"
+            class="bg-purple-600 text-white px-4 py-2 rounded-lg">
+            Monthly
+          </button>
+
+        </div>
+
+        <div class="overflow-auto border rounded-xl">
+
+          <table class="w-full border-collapse">
+
+            <thead>
+
+              <tr class="bg-gray-200">
+
+                <th class="border p-2">Invoice</th>
+                <th class="border p-2">Date</th>
+                <th class="border p-2">Time</th>
+                <th class="border p-2">Items</th>
+                <th class="border p-2">Total</th>
+
+              </tr>
+
+            </thead>
+
+            <tbody id="reportBody"></tbody>
+
+          </table>
+
+        </div>
+
+        <div class="text-right mt-5 text-2xl font-bold text-green-600">
+
+          Total Sales :
+          ₹<span id="reportTotal">0</span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  
+
+  <script>
+
+    // PRODUCTS
+    const products = {
+
+      "1001": { name: "Rice", price: 50 },
+      "1002": { name: "Sugar", price: 45 },
+      "1003": { name: "Milk", price: 30 },
+      "1004": { name: "Soap", price: 25 },
+      "1005": { name: "Oil", price: 120 },
+      "1006": { name: "Biscuits", price: 20 }
+
+    };
+
+    // CUSTOMERS
+    let customers =
+      JSON.parse(localStorage.getItem("customers")) || [
+
+        {
+          name: "Sindhu",
+          phone: "9876543210"
+        }
+
+      ];
+
+    localStorage.setItem(
+      "customers",
+      JSON.stringify(customers)
+    );
+
+    // SALES
+    let sales =
+      JSON.parse(localStorage.getItem("sales")) || [];
+
+    // INVOICE
+    let invoiceCounter =
+      parseInt(localStorage.getItem("invoiceCounter")) || 1000;
+
+    function generateInvoice() {
+
+      invoiceCounter++;
+
+      localStorage.setItem(
+        "invoiceCounter",
+        invoiceCounter
+      );
+
+      return "INV" + invoiceCounter;
+
+    }
+
+    // CART
+    let cart =
+      JSON.parse(localStorage.getItem("cart")) || [];
+
+    function saveCart() {
+
+      localStorage.setItem(
+        "cart",
+        JSON.stringify(cart)
+      );
+
+    }
+
+    // SCANNER
+    function onScanSuccess(decodedText) {
+
+      addProduct(decodedText);
+
+    }
+
+    function onScanError(error) {}
+
+    const scanner = new Html5QrcodeScanner(
+      "reader",
+      {
+        fps: 10,
+        qrbox: 250
+      }
+    );
+
+    scanner.render(
+      onScanSuccess,
+      onScanError
+    );
+
+    // MANUAL
+    function manualScan() {
+
+      const code =
+        document.getElementById("barcodeInput")
+        .value
+        .trim();
+
+      if(code === "") return;
+
+      addProduct(code);
+
+      document.getElementById("barcodeInput").value = "";
+
+    }
+
+    // ENTER KEY
+    document
+      .getElementById("barcodeInput")
+      .addEventListener("keypress", function(e){
+
+        if(e.key === "Enter"){
+
+          manualScan();
+
+        }
+
+      });
+
+    // ADD PRODUCT
+    function addProduct(code) {
+
+      if(!products[code]) {
+
+        alert("Product Not Found");
+
+        return;
+      }
+
+      const existing =
+        cart.find(item => item.code === code);
+
+      if(existing) {
+
+        existing.qty++;
+
+      } else {
+
+        cart.push({
+
+          invoice: generateInvoice(),
+          code: code,
+          name: products[code].name,
+          price: products[code].price,
+          qty: 1
+
+        });
+
+      }
+
+      saveCart();
+
+      renderBill();
+
+      showPreview();
+
+    }
+
+    // REMOVE
+    function removeItem(index) {
+
+      cart.splice(index, 1);
+
+      saveCart();
+
+      renderBill();
+
+      showPreview();
+
+    }
+
+    // INCREASE
+    function increaseQty(index) {
+
+      cart[index].qty++;
+
+      saveCart();
+
+      renderBill();
+
+      showPreview();
+
+    }
+
+    // DECREASE
+    function decreaseQty(index) {
+
+      if(cart[index].qty > 1){
+
+        cart[index].qty--;
+
+      } else {
+
+        cart.splice(index, 1);
+
+      }
+
+      saveCart();
+
+      renderBill();
+
+      showPreview();
+
+    }
+
+    // BILL
+    function renderBill() {
+
+      const billBody =
+        document.getElementById("billBody");
+
+      billBody.innerHTML = "";
+
+      let total = 0;
+
+      cart.forEach((item, index) => {
+
+        const itemTotal =
+          item.qty * item.price;
+
+        total += itemTotal;
+
+        billBody.innerHTML += `
+
+          <tr>
+
+            <td class="border p-3">
+              ${item.invoice}
+            </td>
+
+            <td class="border p-3">
+              ${item.name}
+            </td>
+
+            <td class="border p-3 text-center">
+
+              <div class="flex justify-center gap-2">
+
+                <button
+                  onclick="decreaseQty(${index})"
+                  class="bg-red-500 text-white px-2 rounded">
+                  -
+                </button>
+
+                <span>${item.qty}</span>
+
+                <button
+                  onclick="increaseQty(${index})"
+                  class="bg-green-500 text-white px-2 rounded">
+                  +
+                </button>
+
+              </div>
+
+            </td>
+
+            <td class="border p-3 text-center">
+              ₹${item.price}
+            </td>
+
+            <td class="border p-3 text-center">
+              ₹${itemTotal}
+            </td>
+
+            <td class="border p-3 text-center">
+
+              <button
+                onclick="removeItem(${index})"
+                class="bg-red-600 text-white px-3 py-1 rounded">
+                Delete
+              </button>
+
+            </td>
+
+          </tr>
+
+        `;
+
+      });
+
+      document.getElementById("grandTotal")
+      .innerText = total.toFixed(2);
+
+    }
+
+    // CUSTOMER SEARCH
+    function fetchCustomer() {
+
+      let phone =
+        document.getElementById("searchPhone")
+        .value
+        .trim();
+
+      customers =
+        JSON.parse(localStorage.getItem("customers")) || [];
+
+      let customer =
+        customers.find(c => c.phone == phone);
+
+      if(customer) {
+
+        document.getElementById("resultName")
+        .innerText = customer.name;
+
+      } else {
+
+        document.getElementById("resultName")
+        .innerText = "Not Found";
+
+      }
+
+      showPreview();
+
+    }
+
+    // PREVIEW
+    function showPreview() {
+
+      const previewBody =
+        document.getElementById("previewBody");
+
+      previewBody.innerHTML = "";
+
+      let subtotal = 0;
+
+      cart.forEach(item => {
+
+        const itemTotal =
+          item.qty * item.price;
+
+        subtotal += itemTotal;
+
+        previewBody.innerHTML += `
+
+          <tr>
+
+            <td class="border p-2">
+              ${item.invoice}
+            </td>
+
+            <td class="border p-2">
+              ${item.name}
+            </td>
+
+            <td class="border p-2 text-center">
+              ${item.qty}
+            </td>
+
+            <td class="border p-2 text-center">
+              ₹${item.price}
+            </td>
+
+            <td class="border p-2 text-center">
+              ₹${itemTotal}
+            </td>
+
+          </tr>
+
+        `;
+
+      });
+
+      let sgst = subtotal * 9 / 100;
+      let cgst = subtotal * 9 / 100;
+      let gst = subtotal * 18 / 100;
+      let grandTotal = subtotal + gst;
+
+      let points =
+        Math.floor(grandTotal / 100);
+
+      document.getElementById("subTotal")
+      .innerText = subtotal.toFixed(2);
+
+      document.getElementById("sgstTotal")
+      .innerText = sgst.toFixed(2);
+
+      document.getElementById("cgstTotal")
+      .innerText = cgst.toFixed(2);
+
+      document.getElementById("gstTotal")
+      .innerText = gst.toFixed(2);
+
+      document.getElementById("previewTotal")
+      .innerText = grandTotal.toFixed(2);
+
+      document.getElementById("rewardPoints")
+      .innerText = points;
+
+      document.getElementById("billCustomerName")
+      .innerText =
+      document.getElementById("resultName")
+      .innerText;
+
+      document.getElementById("billCustomerPhone")
+      .innerText =
+      document.getElementById("searchPhone")
+      .value;
+
+      const now = new Date();
+
+      document.getElementById("dateTime")
+      .innerHTML = `
+
+        ${now.toLocaleDateString()}
+        <br>
+        ${now.toLocaleTimeString()}
+
+      `;
+
+    }
+
+    // SAVE SALES
+    function saveSalesReport() {
+
+      let subtotal = cart.reduce((sum, item) => {
+
+        return sum + (item.qty * item.price);
+
+      }, 0);
+
+      let gst = subtotal * 18 / 100;
+
+      let grandTotal = subtotal + gst;
+
+      const report = {
+
+        invoice: cart[0]?.invoice || generateInvoice(),
+        date: new Date().toLocaleDateString(),
+        time: new Date().toLocaleTimeString(),
+        items: cart.length,
+        total: grandTotal.toFixed(2)
+
+      };
+
+      sales.push(report);
+
+      localStorage.setItem(
+        "sales",
+        JSON.stringify(sales)
+      );
+
+    }
+
+    // SALES REPORT
+    function showSalesReport(type) {
+
+      let reports =
+        JSON.parse(localStorage.getItem("sales")) || [];
+
+      const today =
+        new Date();
+
+      let filtered = [];
+
+      if(type === "daily") {
+
+        filtered = reports.filter(r => {
+
+          return r.date ===
+          today.toLocaleDateString();
+
+        });
+
+      }
+
+      if(type === "weekly") {
+
+        filtered = reports.filter(r => {
+
+          const reportDate =
+            new Date(r.date);
+
+          const diff =
+            (today - reportDate) /
+            (1000 * 60 * 60 * 24);
+
+          return diff <= 7;
+
+        });
+
+      }
+
+      if(type === "monthly") {
+
+        filtered = reports.filter(r => {
+
+          const reportDate =
+            new Date(r.date);
+
+          return reportDate.getMonth() ===
+          today.getMonth();
+
+        });
+
+      }
+
+      let html = "";
+
+      let totalSales = 0;
+
+      filtered.forEach(r => {
+
+        totalSales += parseFloat(r.total);
+
+        html += `
+
+          <tr>
+
+            <td class="border p-2">
+              ${r.invoice}
+            </td>
+
+            <td class="border p-2">
+              ${r.date}
+            </td>
+
+            <td class="border p-2">
+              ${r.time}
+            </td>
+
+            <td class="border p-2">
+              ${r.items}
+            </td>
+
+            <td class="border p-2">
+              ₹${r.total}
+            </td>
+
+          </tr>
+
+        `;
+
+      });
+
+      document.getElementById("reportBody")
+      .innerHTML = html;
+
+      document.getElementById("reportTotal")
+      .innerText = totalSales.toFixed(2);
+
+    }
+
+    // PDF
+    async function downloadPDF() {
+
+  if(cart.length === 0){
+
+    alert("Cart is Empty");
+
+    return;
+  }
+
+  saveSalesReport();
+
+  showPreview();
+
+  const { jsPDF } = window.jspdf;
+
+  const doc = new jsPDF();
+
+  let y = 20;
+
+  // TOTALS
+  let subtotal = cart.reduce((sum, item) => {
+
+    return sum + (item.qty * item.price);
+
+  }, 0);
+
+  let sgst = subtotal * 9 / 100;
+
+  let cgst = subtotal * 9 / 100;
+
+  let gst = subtotal * 18 / 100;
+
+  let grandTotal = subtotal + gst;
+
+  let coins =
+    Math.floor(grandTotal / 100);
+
+  // CUSTOMER
+  let customerName =
+    document.getElementById("billCustomerName")
+    .innerText;
+
+  let customerPhone =
+    document.getElementById("billCustomerPhone")
+    .innerText;
+
+  // HEADER
+  doc.setFontSize(22);
+
+  doc.text(
+    "SK DEPARTMENT STORES",
+    40,
+    y
+  );
+
+  y += 10;
+
+  doc.setFontSize(11);
+
+  doc.text(
+    "Date : " + new Date().toLocaleString(),
+    10,
+    y
+  );
+
+  y += 8;
+
+  doc.text(
+    "Invoice : " + cart[0].invoice,
+    10,
+    y
+  );
+
+  y += 8;
+
+  doc.text(
+    "Customer : " + customerName,
+    10,
+    y
+  );
+
+  y += 8;
+
+  doc.text(
+    "Phone : " + customerPhone,
+    10,
+    y
+  );
+
+  y += 15;
+
+  // TABLE HEADER
+  doc.setFontSize(12);
+
+  doc.text("Item", 10, y);
+  doc.text("Qty", 80, y);
+  doc.text("Price", 110, y);
+  doc.text("Total", 160, y);
+
+  y += 5;
+
+  doc.line(10, y, 200, y);
+
+  y += 10;
+
+  // PRODUCTS
+  cart.forEach((item) => {
+
+    let total =
+      item.qty * item.price;
+
+    doc.text(
+      item.name,
+      10,
+      y
+    );
+
+    doc.text(
+      item.qty.toString(),
+      80,
+      y
+    );
+
+    doc.text(
+      "Rs." + item.price,
+      110,
+      y
+    );
+
+    doc.text(
+      "Rs." + total,
+      160,
+      y
+    );
+
+    y += 10;
+
+  });
+
+  // LINE
+  doc.line(10, y, 200, y);
+
+  y += 10;
+
+  // TOTALS
+  doc.text(
+    "Subtotal : Rs." +
+    subtotal.toFixed(2),
+    10,
+    y
+  );
+
+  y += 8;
+
+  doc.text(
+    "SGST (9%) : Rs." +
+    sgst.toFixed(2),
+    10,
+    y
+  );
+
+  y += 8;
+
+  doc.text(
+    "CGST (9%) : Rs." +
+    cgst.toFixed(2),
+    10,
+    y
+  );
+
+  y += 8;
+
+  doc.text(
+    "GST (18%) : Rs." +
+    gst.toFixed(2),
+    10,
+    y
+  );
+
+  y += 12;
+
+  // GRAND TOTAL
+  doc.setFontSize(16);
+
+  doc.text(
+    "Grand Total : Rs." +
+    grandTotal.toFixed(2),
+    10,
+    y
+  );
+
+  y += 12;
+
+  // REWARD COINS
+  doc.setFontSize(14);
+
+  doc.text(
+    "Reward Coins : " + coins,
+    10,
+    y
+  );
+
+  y += 20;
+
+  // FOOTER
+  doc.setFontSize(14);
+
+  doc.text(
+    "Thank You Visit Again",
+    55,
+    y
+  );
+
+  // SAVE PDF
+  doc.save("Invoice_Bill.pdf");
+
+}
+ // CLEAR
+    function clearBill() {
+
+      cart = [];
+
+      saveCart();
+
+      renderBill();
+
+      showPreview();
+
+    }
+
+    // LOAD
+    renderBill();
+
+    showPreview();
+
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Supermarket Product Management</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <!-- JsBarcode -->
+  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+</head>
+
+<body class="bg-gray-100">
+
+  <div class="flex min-h-screen">
+
+    <!-- Sidebar -->
+    <div class="w-64 bg-gradient-to-b from-purple-800 to-pink-700 text-white p-5 hidden md:block">
+
+      <h1 class="text-2xl font-bold mb-10">
+        SK DEPARTMENT STORES
+      </h1>
+
+       <ul>
+
+        <a href="index.html"><li class="hover:/20 p-3 rounded-lg">
+          <i class="bi bi-speedometer2 me-2"></i>
+          Dashboard
+          </a>
+        </li>
+
+        <!-- Supplier -->
+        <li class="p-3 hover:bg-white/20 rounded-lg cursor-pointer ">
+          <a href="suppliers.html" class="nav-link text-white mb-2">
+            <i class="bi bi-people me-2"></i>
+            Supplier
+          </a>
+        </li>
+
+        <!-- Category -->
+        <li class="p-3 hover:bg-white/20 rounded-lg cursor-pointer">
+          <a href="categories.html" class="nav-link text-white mb-2">
+            <i class="bi bi-list-ul me-2"></i>
+            Category
+          </a>
+        </li>
+
+        <!-- Unit -->
+        <li class="p-3 hover:bg-white/20 rounded-lg cursor-pointer">
+          <a href="unit.html" class="nav-link text-white mb-2">
+            <i class="bi bi-rulers me-2"></i>
+            Unit
+          </a>
+        </li>
+
+        <!--product-->
+        <a href="product.html"><li class="p-3 bg-white/20 rounded-lg cursor-pointer">
+          <i class="bi bi-box-seam me-2"></i>
+          Products
+          </a>
+        </li>
+        <!--Cusromer card-->
+        <a href="customercard.html"><li class="p-3 hover:bg-white/20 rounded-lg cursor-pointer">
+          <i class="bi bi-people me-2"></i>
+          Customer Card
+          </a>
+        </li>
+        <!--POS-->
+       <a href="POS.html"><li class="p-3 hover:bg-white/20 rounded-lg cursor-pointer">
+          <i class="bi bi-receipt me-2"></i>
+          POS
+          </a>
+        </li>
+       
+        <!--Invice-->
+         <a href="invoice.html" > <li class="p-3 hover:bg-white/20 rounded-lg cursor-pointer">
+    <i class="bi bi-file-earmark-text me-2"></i>
+            Invoice
+          </a>
+        </li>
+
+      </ul>
+
+    </div>
+
+    <!-- Main -->
+    <div class="flex-1">
+
+      <!-- Navbar -->
+      <div class="bg-gradient-to-r from-purple-600 to-orange-500 p-4">
+
+        <h1 class="text-3xl text-white font-bold text-center">
+          PRODUCT MANAGEMENT
+        </h1>
+
+      </div>
+
+      <!-- Container -->
+      <div class="max-w-7xl mx-auto p-5">
+
+        <!-- Product Form -->
+        <div class="bg-white p-6 rounded-2xl shadow-lg">
+
+          <h2 class="text-2xl text-purple-600 font-bold mb-5">
+            Add Product
+          </h2>
+
+          <div class="grid md:grid-cols-3 gap-4">
+
+            <input id="invoice"
+              placeholder="Invoice Number"
+              class="border p-3 rounded-lg">
+
+            <input id="name"
+              placeholder="Product Name"
+              class="border p-3 rounded-lg">
+
+            <select id="supplier"
+              class="border p-3 rounded-lg">
+            </select>
+
+            <select id="category"
+              class="border p-3 rounded-lg">
+            </select>
+
+            <select id="unit"
+              class="border p-3 rounded-lg">
+            </select>
+
+            <input id="quantity"
+              type="number"
+              placeholder="Quantity"
+              class="border p-3 rounded-lg">
+
+            <input id="price"
+              type="number"
+              placeholder="Price"
+              class="border p-3 rounded-lg">
+
+            <input id="mfg"
+              type="date"
+              class="border p-3 rounded-lg">
+
+            <input id="exp"
+              type="date"
+              class="border p-3 rounded-lg">
+
+          </div>
+
+          <!-- Barcode -->
+          <div class="mt-5">
+
+            <div class="flex gap-3 flex-wrap">
+
+              <input id="barcode"
+                placeholder="Barcode"
+                class="border p-3 rounded-lg w-full md:w-80">
+
+              <button
+                onclick="generateBarcode()"
+                class="bg-purple-600 text-white px-5 py-3 rounded-lg">
+
+                Generate Barcode
+
+              </button>
+
+            </div>
+
+            <svg id="barcodeImg" class="mt-5"></svg>
+
+          </div>
+
+          <!-- Buttons -->
+          <div class="flex gap-3 mt-6 flex-wrap">
+
+            <button
+              onclick="saveItem()"
+              class="bg-green-600 text-white px-6 py-3 rounded-lg">
+
+              Save Product
+
+            </button>
+
+            <button
+              onclick="clearForm()"
+              class="bg-yellow-500 text-white px-6 py-3 rounded-lg">
+
+              Clear
+
+            </button>
+
+          </div>
+
+        </div>
+
+        <!-- Search -->
+        <div class="bg-white p-5 rounded-2xl shadow-lg mt-8">
+
+          <h2 class="text-3xl text-purple-600 font-bold mb-4">
+            Search Products
+          </h2>
+
+          <div class="grid md:grid-cols-4 gap-4">
+
+            <input id="search"
+              placeholder="Search Product"
+              class="border p-3 rounded-lg">
+
+            <select id="filterCategory"
+              class="border p-3 rounded-lg">
+            </select>
+
+            <input id="filterBarcode"
+              placeholder="Search Barcode"
+              class="border p-3 rounded-lg">
+
+            <input id="filterQty"
+              type="number"
+              placeholder="Minimum Qty"
+              class="border p-3 rounded-lg">
+
+          </div>
+
+        </div>
+
+        <!-- Product Table -->
+        <div class="bg-white rounded-2xl shadow-lg overflow-auto mt-8">
+
+          <table class="w-full">
+
+            <thead class="bg-gradient-to-r from-purple-600 to-orange-500 text-white">
+
+              <tr>
+
+                <th class="p-3">Invoice</th>
+                <th class="p-3">Name</th>
+                <th class="p-3">Supplier</th>
+                <th class="p-3">Category</th>
+                <th class="p-3">Unit</th>
+                <th class="p-3">Qty</th>
+                <th class="p-3">Price</th>
+                <th class="p-3">Total</th>
+                <th class="p-3">Barcode</th>
+                <th class="p-3">Action</th>
+
+              </tr>
+
+            </thead>
+
+            <tbody id="table"></tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+
+    // Dropdown Data
+    let categories = JSON.parse(localStorage.getItem("categories")) || [
+      "Grains",
+      "Dairy",
+      "Beverages"
+    ];
+
+    let suppliers = JSON.parse(localStorage.getItem("suppliers")) || [
+      "Aavin",
+      "Rice Store",
+      "Coca Cola"
+    ];
+
+    let units = JSON.parse(localStorage.getItem("units")) || [
+      "Kg",
+      "Litre",
+      "Packet"
+    ];
+
+    // Save Defaults
+    localStorage.setItem("categories", JSON.stringify(categories));
+    localStorage.setItem("suppliers", JSON.stringify(suppliers));
+    localStorage.setItem("units", JSON.stringify(units));
+
+    // Inventory
+    let inventory = JSON.parse(localStorage.getItem("inventory")) || [];
+
+    let editId = null;
+
+    // Load Dropdowns
+    function loadDropdowns(selected = {}) {
+
+      let cat = document.getElementById("category");
+      let sup = document.getElementById("supplier");
+      let unt = document.getElementById("unit");
+      let filterCat = document.getElementById("filterCategory");
+
+      cat.innerHTML = "<option value=''>Select Category</option>";
+      sup.innerHTML = "<option value=''>Select Supplier</option>";
+      unt.innerHTML = "<option value=''>Select Unit</option>";
+      filterCat.innerHTML = "<option value=''>All Categories</option>";
+
+     categories.forEach(c => {
+
+    let name = typeof c === "object" ? c.name : c;
+
+    cat.innerHTML += `
+      <option value="${name}" ${selected.category === name ? "selected" : ""}>
+      ${name}
+      </option>`;
+
+    filterCat.innerHTML += `<option value="${name}">${name}</option>`;
+  });
+
+     suppliers.forEach(s => {
+
+    let name = typeof s === "object" ? s.name : s;
+
+    sup.innerHTML += `
+      <option value="${name}" ${selected.supplier === name ? "selected" : ""}>
+      ${name}
+      </option>`;
+  });
+
+     units.forEach(u => {
+
+    let name = typeof u === "object" ? u.code : u;
+
+    unt.innerHTML += `
+      <option value="${name}" ${selected.unit === name ? "selected" : ""}>
+      ${name}
+      </option>`;
+  });
+    }
+
+    // Generate Barcode
+    function generateBarcode() {
+
+      let code = "BAR" + Date.now();
+
+      document.getElementById("barcode").value = code;
+
+      JsBarcode("#barcodeImg", code, {
+        format: "CODE128",
+        width: 2,
+        height: 60,
+        displayValue: true
+      });
+    }
+
+    // Save Product
+    function saveItem() {
+
+      let item = {
+
+        id: editId || Date.now(),
+
+        invoice: document.getElementById("invoice").value,
+
+        name: document.getElementById("name").value,
+
+        supplier: document.getElementById("supplier").value,
+
+        category: document.getElementById("category").value,
+
+        unit: document.getElementById("unit").value,
+
+        quantity: Number(document.getElementById("quantity").value),
+
+        price: Number(document.getElementById("price").value),
+
+        barcode: document.getElementById("barcode").value,
+
+        mfg: document.getElementById("mfg").value,
+
+        exp: document.getElementById("exp").value
+      };
+
+      // Validation
+      if (
+        !item.invoice ||
+        !item.name ||
+        !item.supplier ||
+        !item.category ||
+        !item.unit ||
+        !item.quantity ||
+        !item.price ||
+        !item.barcode
+      ) {
+
+        alert("Fill all fields");
+        return;
+      }
+
+      // Update Product
+      if (editId) {
+
+        let index = inventory.findIndex(x => x.id === editId);
+
+        inventory[index] = item;
+
+      } else {
+
+        inventory.push(item);
+      }
+
+      // Save to LocalStorage
+      localStorage.setItem(
+        "inventory",
+        JSON.stringify(inventory)
+      );
+
+      render();
+      clearForm();
+
+      alert("Product Saved Successfully");
+    }
+
+    // Render Table
+    function render() {
+
+      let table = document.getElementById("table");
+
+      table.innerHTML = "";
+
+      let search = document.getElementById("search")
+        .value
+        .toLowerCase();
+
+      let category = document.getElementById("filterCategory").value;
+
+      let qty = document.getElementById("filterQty").value;
+
+      let barcode = document.getElementById("filterBarcode").value;
+
+      let filtered = inventory.filter(i =>
+
+        (!search || i.name.toLowerCase().includes(search)) &&
+
+        (!category || i.category === category) &&
+
+        (!qty || i.quantity >= qty) &&
+
+        (!barcode || i.barcode.includes(barcode))
+      );
+
+      filtered.forEach(i => {
+
+        table.innerHTML += `
+
+        <tr class="border text-center hover:bg-gray-100">
+
+          <td class="p-3">${i.invoice}</td>
+
+          <td class="p-3">${i.name}</td>
+
+          <td class="p-3">${i.supplier}</td>
+
+          <td class="p-3">${i.category}</td>
+
+          <td class="p-3">${i.unit}</td>
+
+          <td class="p-3">${i.quantity}</td>
+
+          <td class="p-3">₹${i.price}</td>
+
+          <td class="p-3">₹${i.quantity * i.price}</td>
+
+          <td class="p-3">
+            <svg id="barcode-${i.id}"></svg>
+          </td>
+
+          <td class="p-3 space-x-2">
+
+            <button
+              onclick="editItem(${i.id})"
+              class="bg-yellow-500 text-white px-3 py-1 rounded">
+              Edit
+            </button>
+
+            <button
+              onclick="deleteItem(${i.id})"
+              class="bg-red-600 text-white px-3 py-1 rounded">
+              Delete
+            </button>
+
+          </td>
+
+        </tr>`;
+      });
+
+      // Generate Barcode Images
+      filtered.forEach(i => {
+
+        JsBarcode(`#barcode-${i.id}`, i.barcode, {
+          format: "CODE128",
+          width: 1.5,
+          height: 40,
+          displayValue: true
+        });
+      });
+    }
+
+    // Edit Product
+    function editItem(id) {
+
+      let i = inventory.find(x => x.id === id);
+
+      loadDropdowns({
+        category: i.category,
+        supplier: i.supplier,
+        unit: i.unit
+      });
+
+      document.getElementById("invoice").value = i.invoice;
+      document.getElementById("name").value = i.name;
+      document.getElementById("supplier").value = i.supplier;
+      document.getElementById("category").value = i.category;
+      document.getElementById("unit").value = i.unit;
+      document.getElementById("quantity").value = i.quantity;
+      document.getElementById("price").value = i.price;
+      document.getElementById("barcode").value = i.barcode;
+      document.getElementById("mfg").value = i.mfg;
+      document.getElementById("exp").value = i.exp;
+
+      JsBarcode("#barcodeImg", i.barcode, {
+        format: "CODE128",
+        width: 2,
+        height: 60,
+        displayValue: true
+      });
+
+      editId = id;
+    }
+
+    // Delete Product
+    function deleteItem(id) {
+
+      if (!confirm("Delete this product?")) return;
+
+      inventory = inventory.filter(x => x.id !== id);
+
+      localStorage.setItem(
+        "inventory",
+        JSON.stringify(inventory)
+      );
+
+      render();
+    }
+
+    // Clear Form
+    function clearForm() {
+
+      document.getElementById("invoice").value = "";
+      document.getElementById("name").value = "";
+      document.getElementById("quantity").value = "";
+      document.getElementById("price").value = "";
+      document.getElementById("barcode").value = "";
+      document.getElementById("mfg").value = "";
+      document.getElementById("exp").value = "";
+
+      document.getElementById("barcodeImg").innerHTML = "";
+
+      loadDropdowns();
+
+      editId = null;
+    }
+
+    // Search Filters
+    document.getElementById("search").oninput = render;
+    document.getElementById("filterCategory").onchange = render;
+    document.getElementById("filterBarcode").oninput = render;
+    document.getElementById("filterQty").oninput = render;
+
+    // Initialize
+    loadDropdowns();
+    render();
+
+  </script>
+
+</body>
+
+</html>
+```
